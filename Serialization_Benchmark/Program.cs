@@ -12,6 +12,8 @@ BenchmarkSwitcher.FromAssembly(Assembly.GetExecutingAssembly()).Run(args);
 public class SerializationBenchmark
 {
     private Person _person;
+    private byte[] _jsonData;
+    private byte[] _protobufData;
 
     [GlobalSetup]
     public void Setup()
@@ -29,6 +31,13 @@ public class SerializationBenchmark
                 Zipcode = 12345
             }
         };
+
+        _jsonData = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(_person));
+
+        using var memoryStream = new MemoryStream();
+        Serializer.Serialize(memoryStream, _person);
+         
+        _protobufData = memoryStream.ToArray();
     }
 
     [Benchmark]
@@ -38,10 +47,24 @@ public class SerializationBenchmark
     }
 
     [Benchmark]
+    public Person JsonDeserializer()
+    {
+        string json = System.Text.Encoding.UTF8.GetString(_jsonData);
+        return JsonConvert.DeserializeObject<Person>(json);
+    }
+
+    [Benchmark]
     public byte[] ProtobuffSerializer()
     {
         using var memoryStream = new MemoryStream();
         Serializer.Serialize(memoryStream, _person);
         return memoryStream.ToArray();
+    }
+
+    [Benchmark]
+    public Person ProtobuffDeserializer()
+    {
+        using var memoryStream = new MemoryStream(_protobufData);
+        return Serializer.Deserialize<Person>(memoryStream);
     }
 }
