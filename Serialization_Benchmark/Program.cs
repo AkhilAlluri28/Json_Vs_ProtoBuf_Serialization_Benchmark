@@ -15,6 +15,8 @@ public class SerializationBenchmark
     private byte[] _jsonData;
     private byte[] _protobufData;
 
+
+    // Test-change
     [GlobalSetup]
     public void Setup()
     {
