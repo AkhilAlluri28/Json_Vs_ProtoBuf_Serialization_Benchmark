@@ -1,7 +1,9 @@
 ﻿using ProtoBuf;
-
 namespace Serialization_Benchmark.Models
 {
+    /// <summary>
+    /// Person record.
+    /// </summary>
     [ProtoContract]
     public class Person
     {
