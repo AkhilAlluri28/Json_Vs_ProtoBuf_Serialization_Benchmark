@@ -7,6 +7,9 @@ namespace Serialization_Benchmark.Models
     [ProtoContract]
     public class Person
     {
+        /// <summary>
+        /// Unique identifier
+        /// </summary>
         [ProtoMember(1)]
         public int Id { get; set; }
         [ProtoMember(2)]
